@@ -1,0 +1,14 @@
+black
+bumpversion
+twine
+ipython
+bandit
+black; python_version > '3.5'
+codecov
+bump2version
+flake8
+flake8-cognitive-complexity
+mypy
+pylint
+pytest
+pytest-cov

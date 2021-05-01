@@ -1,0 +1,6 @@
+matplotlib
+numpy
+textblob
+wordcloud
+nltk
+importlib-metadata; python_version < '3.8'
