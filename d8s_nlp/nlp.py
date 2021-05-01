@@ -1,14 +1,6 @@
-import os
-import sys
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
-import decorators
-
-
 def wordCloud(text, output_file_path=None):
     """Create a word cloud based on the given text."""
     import matplotlib.pyplot as plt
-    from _utility import metaOutput
     from wordcloud import STOPWORDS, WordCloud
 
     wordcloud = WordCloud(stopwords=STOPWORDS, background_color='white').generate(text)
@@ -22,7 +14,7 @@ def wordCloud(text, output_file_path=None):
     # TODO: it would be nice to save the image of the word cloud
     if output_file_path:
         figure.savefig(output_file_path)
-        metaOutput('Saved an image of this word-cloud to "{}"'.format(output_file_path))
+        print('Saved an image of this word-cloud to "{}"'.format(output_file_path))
 
     return plt
 
@@ -30,21 +22,19 @@ def wordCloud(text, output_file_path=None):
 def wordStem(word, stemmer='porter'):
     """Return the stem of the given word."""
     import nltk
-    from _utility import metaOutput
-    from strings import lowercase, titlecase
 
     available_stemmers = ['porter', 'lancaster']
-    if lowercase(stemmer) not in available_stemmers:
-        metaOutput('! Invalid stemmer given: {}\nAvailable stemmers are: {}'.format(stemmer, available_stemmers))
+    if stemmer.lower() not in available_stemmers:
+        print('! Invalid stemmer given: {}\nAvailable stemmers are: {}'.format(stemmer, available_stemmers))
         return
 
-    stemmer_object = eval('nltk.{}Stemmer()'.format(titlecase(stemmer)))
+    stemmer_object = eval('nltk.{}Stemmer()'.format(stemmer.title()))
     return stemmer_object.stem(word)
 
 
 def wordsGenerator(letters_list, min_word_length=2, required_characters_list=None):
     """Generate all possible words from the given list of letters."""
-    from iterables import iterableNotIn
+    from d8s_lists import iterableNotIn
 
     valid_word_list = nltkWordList()
     letters = frequencyDistribution(''.join(letters_list))
@@ -197,7 +187,7 @@ def wordDispersionPlot(text, word_list):
 
 
 def wordFrequency(text):
-    from iterables import count
+    from d8s_lists import count
 
     word_list = words(text)
     return count(word_list)
@@ -212,7 +202,6 @@ def similarWords(text, word):
 # TODO: this can also be called "lexical richness" or "lexical_diversity" (see http://www.nltk.org/book/ch01.html) - we should capture that somewhere
 def wordRepitition(text):
     """Return the ratio of the number of unique words with the total number of words in the text."""
-    from _utility import metaOutput
 
     unique_word_count = len(wordsUnique(text)) - 1
     word_count = len(words(text))
@@ -220,7 +209,7 @@ def wordRepitition(text):
     if word_count > 0:
         return 1 - (unique_word_count / word_count)
     else:
-        metaOutput('No words found in the given text')
+        print('No words found in the given text')
         return None
 
 
@@ -253,7 +242,7 @@ def textCollocations(text):
 
 def wordRepititionPercent(text):
     """Return the percentage of the words which are repeated in the text."""
-    from maths import percent
+    from d8s_math import percent
 
     word_repitition_ratio = wordRepitition(text)
     return percent(word_repitition_ratio)
@@ -276,7 +265,7 @@ def _textTagFilter(tags, tag_filter):
 
 def _textTagDeduplication(tags):
     """Deduplicate the tags and return only the name and not the part of speech."""
-    from iterables import deduplicate
+    from d8_lists import deduplicate
 
     return deduplicate([tag[0] for tag in tags])
 
@@ -301,7 +290,7 @@ def properNouns(text):
 
 def properNounsCount(text):
     """."""
-    from iterables import count
+    from d8s_lists import count
 
     tags = textTags(text)
     proper_nouns = [tag[0] for tag in _textTagFilter(tags, 'NNP')]
@@ -315,24 +304,24 @@ def wordsCount(text):
 
 def wordCount(text, word, ignore_case=True):
     """Find the count of the given word in the text."""
-    from strings import lowercase
+    from d8s_strings import lowercase
 
     text_words = words(text)
 
     if ignore_case:
         text_words = lowercase(text_words)
-        word = lowercase(word)
+        word = word.lower()
 
     return text_words.count(word)
 
 
 def textContains(text, word, ignore_case=True):
     """Return whether or not the text contains the given word."""
-    from strings import lowercase
+    from d8s_strings import lowercase
 
     if ignore_case:
         text = lowercase(text)
-        word = lowercase(word)
+        word = word.lower()
 
     return word in text
 
@@ -349,7 +338,7 @@ def tfidf(word, text, multiple_texts):
 
 def textSkeleton(text):
     """Return the verbs and nouns in the text."""
-    from iterables import iterableCombine
+    from d8s_lists import iterableCombine
 
     verbs = textVerbs(text)
     nouns = textNouns(text)
@@ -358,10 +347,10 @@ def textSkeleton(text):
 
 def wordsUnique(text):
     """Get a deduplicated list of all of the words in the given text."""
-    from iterables import deduplicate
-    from strings import lowercase
+    from d8s_lists import deduplicate
+    from d8s_strings import lowercase
 
-    word_list = [lowercase(word) for word in words(text)]
+    word_list = lowercase(words(text))
     unique_words = deduplicate(word_list)
     return unique_words
 
@@ -372,7 +361,7 @@ def subjectivity(string):
 
 
 def subjectivityNumberLine(string):
-    from maths import numberLine
+    from d8s_math import numberLine
 
     return numberLine(subjectivity(string), 0, 1, 0.1)
 
@@ -386,8 +375,8 @@ def nltkWordList():
 
 # TODO: this function should be able to remove stopwords from both a list and a string
 def stopwordsRemove(string):
-    from iterables import iterableNotIn
-    from strings import lowercase
+    from d8s_lists import iterableNotIn
+    from d8s_strings import lowercase
     from wordcloud import STOPWORDS
 
     # not sure if lowercasing this is the correct move, but if this is not done, words like "And" and "AND" will not be removed
@@ -401,14 +390,13 @@ def stopwordsRemove(string):
 
 def sentenceAverageLength(string):
     """Return the average length of a sentence in the string."""
-    from _utility import metaOutput
 
     word_count = len(words(string))
     sentence_count = len(sentences(string))
     if sentence_count > 0:
         return word_count / sentence_count
     else:
-        metaOutput('No sentences found in the given string')
+        print('No sentences found in the given string')
         return None
 
 
@@ -432,7 +420,7 @@ def ngrams(string, n=3):
 
 
 def ngramsCommon(string, n=3):
-    from iterables import count
+    from d8s_lists import count
 
     grams = ngrams(string, n)
     if grams:
@@ -449,7 +437,7 @@ def nounPhrases(string):
 
 
 def nounPhrasesCommon(string):
-    from iterables import count
+    from d8s_lists import count
 
     phrases = nounPhrases(string)
     return count(phrases)
@@ -461,7 +449,7 @@ def polarity(string):
 
 
 def polarityNumberLine(string):
-    from maths import numberLine
+    from d8s_math import numberLine
 
     return numberLine(polarity(string), -1, 1, 0.1)
 

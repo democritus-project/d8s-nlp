@@ -1,5 +1,4 @@
-from ._utility import listify
-from .nlp import (
+from d8s_nlp import (
     ngrams,
     ngramsCommon,
     tfidf,
@@ -41,7 +40,7 @@ def test_ngrams_1():
 def test_wordsGenerator():
     assert wordsGenerator(['a', 't', 'i']) == ['ai', 'ait', 'at', 'it', 'ta', 'tai', 'ti', 'at']
     # this example is based on http://www.nltk.org/book/ch02.html#fig-target
-    assert wordsGenerator(listify('egivrvonl'), min_word_length=4, required_characters_list=['r']) == [
+    assert wordsGenerator(tuple('egivrvonl'), min_word_length=4, required_characters_list=['r']) == (
         'enrol',
         'ergon',
         'genro',
@@ -134,7 +133,7 @@ def test_wordsGenerator():
         'iron',
         'over',
         'ring',
-    ]
+    )
 
 
 def test_wordHyponymsCommon():
