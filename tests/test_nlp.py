@@ -1,29 +1,29 @@
 from d8s_nlp import (
     ngrams,
-    ngramsCommon,
+    ngrams_common,
     tfidf,
-    wordEntailments,
-    wordHolonyms,
-    wordHyponyms,
-    wordHyponymsCommon,
-    wordMeronyms,
-    wordsGenerator,
-    wordsLowestCommonHypernyms,
-    wordsSemanticSimilarity,
-    wordStem,
+    word_entailments,
+    word_holonyms,
+    word_hyponyms,
+    word_hyponyms_common,
+    word_meronyms,
+    words_generate,
+    words_lowest_common_hypernyms,
+    words_semantic_similarity,
+    word_stem,
 )
 
 
-def test_ngramsCommon_1():
-    assert ngramsCommon('this is just a foo foo') == {
+def test_ngrams_common_1():
+    assert ngrams_common('this is just a foo foo') == {
         'this is just': 1,
         'is just a': 1,
         'just a foo': 1,
         'a foo foo': 1,
     }
-    assert ngramsCommon('foo foo foo') == {'foo foo foo': 1}
+    assert ngrams_common('foo foo foo') == {'foo foo foo': 1}
     # handle situations where n is larger than the words in the string
-    assert ngramsCommon('foo foo foo', n=4) == {}
+    assert ngrams_common('foo foo foo', n=4) == {}
 
 
 def test_ngrams_1():
@@ -37,10 +37,10 @@ def test_ngrams_1():
     assert n_grams == []
 
 
-def test_wordsGenerator():
-    assert wordsGenerator(['a', 't', 'i']) == ['ai', 'ait', 'at', 'it', 'ta', 'tai', 'ti', 'at']
+def test_words_generate():
+    assert words_generate(['a', 't', 'i']) == ['ai', 'ait', 'at', 'it', 'ta', 'tai', 'ti', 'at']
     # this example is based on http://www.nltk.org/book/ch02.html#fig-target
-    assert wordsGenerator(tuple('egivrvonl'), min_word_length=4, required_characters_list=['r']) == (
+    assert words_generate(tuple('egivrvonl'), min_word_length=4, required_characters_list=['r']) == (
         'enrol',
         'ergon',
         'genro',
@@ -136,8 +136,8 @@ def test_wordsGenerator():
     )
 
 
-def test_wordHyponymsCommon():
-    assert wordHyponymsCommon('sport') == [
+def test_word_hyponyms_common():
+    assert word_hyponyms_common('sport') == [
         ['archery'],
         ['athletic_game'],
         ['blood_sport'],
@@ -161,8 +161,8 @@ def test_wordHyponymsCommon():
     ]
 
 
-def test_wordHyponyms():
-    assert wordHyponyms('sport') == [
+def test_word_hyponyms():
+    assert word_hyponyms('sport') == [
         [
             ['archery'],
             ['athletic_game'],
@@ -211,14 +211,14 @@ def test_wordHyponyms():
 
 
 def test_porterStemmer():
-    assert wordStem('lying') == 'lie'
-    assert wordStem('lying', stemmer='porter') == 'lie'
+    assert word_stem('lying') == 'lie'
+    assert word_stem('lying', stemmer='porter') == 'lie'
 
 
 def test_lancasterStemmer():
-    assert wordStem('lying', stemmer='lancaster') == 'lying'
-    assert wordStem('lying', stemmer='Lancaster') == 'lying'
-    assert wordStem('lying', stemmer='LANCASTER') == 'lying'
+    assert word_stem('lying', stemmer='lancaster') == 'lying'
+    assert word_stem('lying', stemmer='Lancaster') == 'lying'
+    assert word_stem('lying', stemmer='LANCASTER') == 'lying'
 
 
 def test_tfidf():
@@ -251,27 +251,27 @@ girl scenario evident in films like Friday the 13th. It was filmed in Los Angele
     assert round(tfidf('Magnum', s3, [s1, s2, s3]), 6) == 0.013667
 
 
-def test_wordMeronyms_1():
+def test_word_meronyms_1():
     assert (
-        str(wordMeronyms("tree"))
+        str(word_meronyms("tree"))
         == "{'part_meronyms': [[Synset('burl.n.02'), Synset('crown.n.07'), Synset('limb.n.02'), Synset('stump.n.01'), Synset('trunk.n.01')], [], [], [], [], [], []], 'substance_meronyms': [[Synset('heartwood.n.01'), Synset('sapwood.n.01')], [], [], [], [], [], []], 'member_meronyms': [[], [], [], [], [], [], []]}"
     )
 
 
-def test_wordHolonyms_1():
+def test_word_holonyms_1():
     assert (
-        str(wordHolonyms("tree"))
+        str(word_holonyms("tree"))
         == "{'part_holonyms': [[], [], [], [], [], [], []], 'substance_holonyms': [[], [], [], [], [], [], []], 'member_holonyms': [[Synset('forest.n.01')], [], [], [], [], [], []]}"
     )
 
 
-def test_wordEntailments_1():
-    assert str(wordEntailments("eat")) == "[[Synset('chew.v.01'), Synset('swallow.v.01')], [], [], [], [], []]"
+def test_word_entailments_1():
+    assert str(word_entailments("eat")) == "[[Synset('chew.v.01'), Synset('swallow.v.01')], [], [], [], [], []]"
 
 
-def test_wordsLowestCommonHypernyms_1():
-    assert str(wordsLowestCommonHypernyms('right_whale', 'minke_whale')) == "[Synset('baleen_whale.n.01')]"
+def test_words_lowest_common_hypernyms_1():
+    assert str(words_lowest_common_hypernyms('right_whale', 'minke_whale')) == "[Synset('baleen_whale.n.01')]"
 
 
-def test_wordsSemanticSimilarity_1():
-    assert wordsSemanticSimilarity('right_whale', 'minke_whale') == 0.25
+def test_words_semantic_similarity_1():
+    assert words_semantic_similarity('right_whale', 'minke_whale') == 0.25
