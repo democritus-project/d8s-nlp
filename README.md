@@ -9,6 +9,12 @@
 
 Democritus functions for working processing natural, human language.
 
+## Installation
+
+```
+pip install d8s-nlp
+```
+
 ## Usage
 
 Coming soon...
