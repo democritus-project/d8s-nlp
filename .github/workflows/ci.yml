@@ -1,0 +1,80 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_smoke:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.14
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v6
+    - name: Build package
+      run: uv build
+
+  build_multi_os:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        python-version: ['3.14']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v6
+    - name: Install dependencies
+      run: uv sync --locked --group dev
+    - name: Download NLP corpora
+      run: |
+        uv run python -m textblob.download_corpora
+        uv run python -c "import nltk; nltk.download('words'); nltk.download('omw-1.4')"
+    - name: Run pytest
+      run: |
+        uv run pytest
+        uv run codecov
+
+  build_multi_py_versions:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v6
+    - name: Install dependencies
+      run: uv sync --locked --group dev
+    - name: Download NLP corpora
+      run: |
+        uv run python -m textblob.download_corpora
+        uv run python -c "import nltk; nltk.download('words'); nltk.download('omw-1.4')"
+    - name: Run pytest
+      run: |
+        uv run pytest
+        uv run codecov

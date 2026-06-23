@@ -1,9 +1,22 @@
+def _iterable_not_in(iterable, other_iterable):
+    """Return the items in the iterable which are not in the other_iterable."""
+    return [item for item in iterable if item not in other_iterable]
+
+
+def _iterable_combine(*iterables):
+    """Combine the given iterables into a single list."""
+    combined = []
+    for iterable in iterables:
+        combined.extend(iterable)
+    return combined
+
+
 def word_cloud(text, output_file_path=None):
     """Create a word cloud based on the given text."""
     import matplotlib.pyplot as plt
     from wordcloud import STOPWORDS, WordCloud
 
-    wordcloud = WordCloud(stopwords=STOPWORDS, background_color='white').generate(text)
+    wordcloud = WordCloud(stopwords=STOPWORDS, background_color="white").generate(text)
 
     figure, axes = plt.subplots()
 
@@ -19,27 +32,26 @@ def word_cloud(text, output_file_path=None):
     return plt
 
 
-def word_stem(word, stemmer='porter'):
+def word_stem(word, stemmer="porter"):
     """Return the stem of the given word."""
-    import nltk
+    import nltk  # noqa: F401  # referenced via eval below
 
-    available_stemmers = ['porter', 'lancaster']
+    available_stemmers = ["porter", "lancaster"]
     if stemmer.lower() not in available_stemmers:
-        print('! Invalid stemmer given: {}\nAvailable stemmers are: {}'.format(stemmer, available_stemmers))
+        print("! Invalid stemmer given: {}\nAvailable stemmers are: {}".format(stemmer, available_stemmers))
         return
 
-    stemmer_object = eval('nltk.{}Stemmer()'.format(stemmer.title()))
+    stemmer_object = eval("nltk.{}Stemmer()".format(stemmer.title()))
     return stemmer_object.stem(word)
 
 
 def words_generate(letters_list, min_word_length=2, required_characters_list=None):
     """Generate all possible, valid words from the given list of letters."""
-    from d8s_lists import iterableNotIn
 
     valid_word_list = nltk_word_list()
-    letters = frequency_distribution(''.join(letters_list))
+    letters = frequency_distribution("".join(letters_list))
 
-    # TODO: I updated this function to use frequency_distribution rather than nltk.freqDist... make sure this is working properly
+    # TODO: I updated this function to use frequency_distribution rather than nltk.freqDist... make sure this is working properly  # noqa: E501
     valid_words = [
         word for word in valid_word_list if len(word) >= min_word_length and frequency_distribution(word) <= letters
     ]
@@ -47,7 +59,7 @@ def words_generate(letters_list, min_word_length=2, required_characters_list=Non
     if required_characters_list is not None:
         # make sure the required characters are present
         # TODO: write a function for filtering
-        valid_words = list(filter(lambda x: iterableNotIn(required_characters_list, x) == [], valid_words))
+        valid_words = list(filter(lambda x: _iterable_not_in(required_characters_list, x) == [], valid_words))
 
     return valid_words
 
@@ -125,12 +137,12 @@ def word_definitions(word):
 
 
 def word_hyponyms_common(word):
-    """Return the hyponyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) of the most common meaning of the given word."""
+    """Return the hyponyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) of the most common meaning of the given word."""  # noqa: E501
     return [a.lemma_names() for a in word_syn_sets(word)[0].hyponyms()]
 
 
 def word_hyponyms(word):
-    """Return the hyponyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) for all meanings of the given word."""
+    """Return the hyponyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) for all meanings of the given word."""  # noqa: E501
     hyponyms = []
     for synset in word_syn_sets(word):
         hyponyms.append([a.lemma_names() for a in synset.hyponyms()])
@@ -143,7 +155,7 @@ def word_root_hypernym(word):
 
 
 def word_hypernyms_common(word):
-    """Return the hypernyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) of the most common meaning of the given word."""
+    """Return the hypernyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) of the most common meaning of the given word."""  # noqa: E501
     return [a.lemma_names() for a in word_syn_sets(word)[0].hypernyms()]
 
 
@@ -155,7 +167,7 @@ def nltk_text(text):
 
 
 def word_hypernyms(word):
-    """Return the hypernyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) for all meanings of the given word."""
+    """Return the hypernyms (see https://en.wikipedia.org/wiki/Hyponymy_and_hypernymy) for all meanings of the given word."""  # noqa: E501
     hypernyms = []
     for synset in word_syn_sets(word):
         hypernyms.append([a.lemma_names() for a in synset.hypernyms()])
@@ -187,10 +199,10 @@ def word_dispersion_plot(text, word_list):
 
 
 def word_frequency(text):
-    from d8s_lists import count
+    from d8s_lists import iterable_count
 
     word_list = words(text)
-    return count(word_list)
+    return iterable_count(word_list)
 
 
 def similar_words(text, word):
@@ -199,17 +211,17 @@ def similar_words(text, word):
     t.similar(word)
 
 
-# TODO: this can also be called "lexical richness" or "lexical_diversity" (see http://www.nltk.org/book/ch01.html) - we should capture that somewhere
+# TODO: this can also be called "lexical richness" or "lexical_diversity" (see http://www.nltk.org/book/ch01.html) - we should capture that somewhere  # noqa: E501
 def word_repitition(text):
     """Return the ratio of the number of unique words with the total number of words in the text."""
 
     unique_word_count = len(words_unique(text)) - 1
     word_count = len(words(text))
-    # todo: the construct below is very similar to the stuff in the `sentence_average_length` function... could consolidate
+    # todo: the construct below is very similar to the stuff in the `sentence_average_length` function... could consolidate  # noqa: E501
     if word_count > 0:
         return 1 - (unique_word_count / word_count)
     else:
-        print('No words found in the given text')
+        print("No words found in the given text")
         return None
 
 
@@ -273,28 +285,28 @@ def _text_tag_deduplication(tags):
 def text_nouns(text):
     """Get all nouns from the text."""
     tags = text_tags(text)
-    return _text_tag_deduplication(_text_tag_filter(tags, 'NN'))
+    return _text_tag_deduplication(_text_tag_filter(tags, "NN"))
 
 
 def text_verbs(text):
     """Get all nouns from the text."""
     tags = text_tags(text)
-    return _text_tag_deduplication(_text_tag_filter(tags, 'VB'))
+    return _text_tag_deduplication(_text_tag_filter(tags, "VB"))
 
 
 def proper_nouns(text):
     """Get all of the proper nouns in text."""
     tags = text_tags(text)
-    return _text_tag_deduplication(_text_tag_filter(tags, 'NNP'))
+    return _text_tag_deduplication(_text_tag_filter(tags, "NNP"))
 
 
 def proper_nouns_count(text):
     """."""
-    from d8s_lists import count
+    from d8s_lists import iterable_count
 
     tags = text_tags(text)
-    proper_nouns = [tag[0] for tag in _text_tag_filter(tags, 'NNP')]
-    return count(proper_nouns)
+    proper_nouns = [tag[0] for tag in _text_tag_filter(tags, "NNP")]
+    return iterable_count(proper_nouns)
 
 
 def words_count(text):
@@ -327,7 +339,7 @@ def text_contains(text, word, ignore_case=True):
 
 
 def tfidf(word, text, multiple_texts):
-    """Find the "Term Frequency, Inverse Document Frequency" for the given word in the given text using the multiple texts."""
+    """Find the "Term Frequency, Inverse Document Frequency" for the given word in the given text using the multiple texts."""  # noqa: E501
     import math
 
     tf = word_count(text, word) / words_count(text)
@@ -338,11 +350,10 @@ def tfidf(word, text, multiple_texts):
 
 def text_skeleton(text):
     """Return the verbs and nouns in the text."""
-    from d8s_lists import iterableCombine
 
     verbs = text_verbs(text)
     nouns = text_nouns(text)
-    return iterableCombine(nouns, verbs)
+    return _iterable_combine(nouns, verbs)
 
 
 def words_unique(text):
@@ -361,9 +372,9 @@ def subjectivity(string):
 
 
 def subjectivity_number_line(string):
-    from d8s_math import numberLine
+    from d8s_math import number_line
 
-    return numberLine(subjectivity(string), 0, 1, 0.1)
+    return number_line(subjectivity(string), 0, 1, 0.1)
 
 
 def nltk_word_list():
@@ -375,17 +386,16 @@ def nltk_word_list():
 
 # TODO: this function should be able to remove stopwords from both a list and a string
 def stopwords_remove(string):
-    from d8s_lists import iterableNotIn
     from d8s_strings import lowercase
     from wordcloud import STOPWORDS
 
-    # not sure if lowercasing this is the correct move, but if this is not done, words like "And" and "AND" will not be removed
+    # not sure if lowercasing this is the correct move, but if this is not done, words like "And" and "AND" will not be removed  # noqa: E501
     word_list = words(lowercase(string))
     # use nltk's stopwords
-    non_stop_words = iterableNotIn(word_list, nltk_stopwords_list())
+    non_stop_words = _iterable_not_in(word_list, nltk_stopwords_list())
     # use wordcloud's stopwords
-    non_stop_words = iterableNotIn(non_stop_words, STOPWORDS)
-    return ' '.join(non_stop_words)
+    non_stop_words = _iterable_not_in(non_stop_words, STOPWORDS)
+    return " ".join(non_stop_words)
 
 
 def sentence_average_length(string):
@@ -396,7 +406,7 @@ def sentence_average_length(string):
     if sentence_count > 0:
         return word_count / sentence_count
     else:
-        print('No sentences found in the given string')
+        print("No sentences found in the given string")
         return None
 
 
@@ -415,16 +425,16 @@ def sentences(string):
 def ngrams(string, n=3):
     blob = text_blob(string)
     # join the ngrams into strings
-    grams = [' '.join(gram) for gram in blob.ngrams(n)]
+    grams = [" ".join(gram) for gram in blob.ngrams(n)]
     return grams
 
 
 def ngrams_common(string, n=3):
-    from d8s_lists import count
+    from d8s_lists import iterable_count
 
     grams = ngrams(string, n)
     if grams:
-        sorted_grams = count(grams)
+        sorted_grams = iterable_count(grams)
     else:
         sorted_grams = {}
     return sorted_grams
@@ -437,10 +447,10 @@ def noun_phrases(string):
 
 
 def noun_phrases_common(string):
-    from d8s_lists import count
+    from d8s_lists import iterable_count
 
     phrases = noun_phrases(string)
-    return count(phrases)
+    return iterable_count(phrases)
 
 
 def polarity(string):
@@ -449,9 +459,9 @@ def polarity(string):
 
 
 def polarity_number_line(string):
-    from d8s_math import numberLine
+    from d8s_math import number_line
 
-    return numberLine(polarity(string), -1, 1, 0.1)
+    return number_line(polarity(string), -1, 1, 0.1)
 
 
 def words(text):
@@ -472,7 +482,7 @@ def sentiment(string):
 def nltk_stopwords_list():
     import nltk.corpus
 
-    return [stopword for stopword in nltk.corpus.stopwords.words('english')]
+    return [stopword for stopword in nltk.corpus.stopwords.words("english")]
 
 
 def word_meronyms_part(word):
@@ -502,9 +512,9 @@ def word_meronyms_substance(word):
 def word_meronyms(word):
     """Find meronyms of the given word."""
     meronyms = {
-        'part_meronyms': word_meronyms_part(word),
-        'substance_meronyms': word_meronyms_substance(word),
-        'member_meronyms': word_meronyms_member(word),
+        "part_meronyms": word_meronyms_part(word),
+        "substance_meronyms": word_meronyms_substance(word),
+        "member_meronyms": word_meronyms_member(word),
     }
 
     return meronyms
@@ -537,9 +547,9 @@ def word_holonyms_substance(word):
 def word_holonyms(word):
     """Find holonyms of the given word."""
     holonyms = {
-        'part_holonyms': word_holonyms_part(word),
-        'substance_holonyms': word_holonyms_substance(word),
-        'member_holonyms': word_holonyms_member(word),
+        "part_holonyms": word_holonyms_part(word),
+        "substance_holonyms": word_holonyms_substance(word),
+        "member_holonyms": word_holonyms_member(word),
     }
 
     return holonyms
@@ -553,7 +563,7 @@ def word_entailments(word):
     return entailments
 
 
-# TODO: the argument given to the two functions below should be a str or synset objects... it would probably make sense to have a string to synset decorator
+# TODO: the argument given to the two functions below should be a str or synset objects... it would probably make sense to have a string to synset decorator  # noqa: E501
 def words_lowest_common_hypernyms(word_a, word_b):
     """Find the lowest common hypernyms for the given words."""
 
