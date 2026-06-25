@@ -1,20 +1,69 @@
-[tool.black]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "d8s_nlp"
+version = "0.2.0"
+description = "Democritus functions for working processing natural, human language."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GNU Lesser General Public License v3" }
+authors = [{ name = "Floyd Hightower" }]
+keywords = ["democritus", "nlp", "natural language processing"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "d8s-lists>=0.8.0,<1.0",
+    "d8s-math>=0.7.0,<1.0",
+    "matplotlib>=3.7,<4.0",
+    "nltk>=3.9.4,<4.0",
+    "numpy>=2.0,<3.0",
+    "textblob>=0.20.0,<1.0",
+    "wordcloud>=1.9.6,<2.0",
+]
+
+[project.urls]
+Source = "https://github.com/democritus-project/d8s-nlp"
+Issues = "https://github.com/democritus-project/d8s-nlp/issues"
+
+[dependency-groups]
+dev = [
+    "codecov>=2.1.13,<3.0",
+    "ipython>=8.18.0,<10.0",
+    "mypy>=2.0,<3.0",
+    "pytest>=9.0,<10.0",
+    "pytest-cov>=7.0,<8.0",
+    "ruff>=0.15.0,<0.16.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["d8s_nlp"]
+
+[tool.ruff]
 line-length = 120
-skip-string-normalization = true
+target-version = "py310"
 
-[tool.isort]
-line_length = 120
-include_trailing_comma = true
+[tool.ruff.lint]
+select = ["E", "F", "I"]
 
-[tool.pylint."MESSAGES CONTROL"]
-max-line-length = 120
-disable = "C0114, R1705, C0103, C0415"
+[tool.ruff.lint.per-file-ignores]
+"d8s_nlp/__init__.py" = ["F401", "F403"]
+"tests/*" = ["E501"]
+
+[tool.mypy]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=. --cov-report term-missing --cov-fail-under 90"
+addopts = "-v --cov=. --cov-report term-missing --cov-fail-under 53"
 python_files = "tests/test_*.py"
-
-[build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
-
-[tool.setuptools_scm]

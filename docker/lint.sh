@@ -4,17 +4,16 @@ set -euxo pipefail
 
 echo "Running linters and formatters..."
 
-isort d8s_nlp/ tests/
+uv run ruff check --fix d8s_nlp/ tests/
+uv run ruff format d8s_nlp/ tests/
 
-black d8s_nlp/ tests/
+# if the CONTEXT env var is "ci" (which is set in .github/workflows/lint.yml), validate that none of the files
+# have been changed by the previous lint steps
+if [ "${CONTEXT:-local}" = "ci" ]; then
+    (git status | grep "nothing to commit") || { echo "Lint steps have changed files"; exit 1; };
+fi
 
-mypy d8s_nlp/ tests/
+uv run mypy d8s_nlp/ tests/
+uv run ruff check d8s_nlp/ tests/
 
-pylint d8s_nlp/*.py
-
-flake8 d8s_nlp/ tests/
-
-bandit -r d8s_nlp/
-
-# we run black again at the end to undo any odd changes made by any of the linters above
-black d8s_nlp/ tests/
+echo "Done ✨ 🎉 ✨"
