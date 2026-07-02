@@ -517,21 +517,21 @@ wheels = [
 
 [[package]]
 name = "d8s-math"
-version = "0.7.0"
+version = "0.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "d8s-strings" },
     { name = "number-tools" },
     { name = "sympy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3c/ba/1d675b372f82665f2c04c79b4a7cb668603c84bf531e82f7305187eca80e/d8s_math-0.7.0.tar.gz", hash = "sha256:32acfc784842def2e1f9a5c69cfb9e09887f8151a8483f434752badd40f7959f", size = 39561, upload-time = "2021-05-21T11:35:42.756Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/93/a2/6a0e40659797ab855bc9d4f5a010399bee711ad8855e32ea9878ae5da953/d8s_math-0.8.0.tar.gz", hash = "sha256:b2d95ee9ad30c19056ec42c33a92cabea4f7c3239fc97adafa3f2d90aa1b0e3b", size = 104363, upload-time = "2026-07-01T12:06:28.131Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cd/8f/8339663a443ab74d894c761fdb12edbf47f3096d50a6478a35247800529b/d8s_math-0.7.0-py2.py3-none-any.whl", hash = "sha256:a474237b72aee6669f343eb0cac056ba79673214e5976b923acdfd5898620719", size = 30204, upload-time = "2021-05-21T11:35:41.608Z" },
+    { url = "https://files.pythonhosted.org/packages/56/c8/d9fe6859d00b1102e389c57acdaed18c4214d15049e49911b3ef958c029d/d8s_math-0.8.0-py3-none-any.whl", hash = "sha256:c2e3bc2743001bcd716365165611589867673a1828df2d4be8e11b41c81e71e9", size = 25753, upload-time = "2026-07-01T12:06:26.994Z" },
 ]
 
 [[package]]
 name = "d8s-nlp"
-version = "0.2.0"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "d8s-lists" },
@@ -580,7 +580,7 @@ dev = [
 
 [[package]]
 name = "d8s-strings"
-version = "0.5.0"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "d8s-dicts" },
@@ -592,9 +592,9 @@ dependencies = [
     { name = "inflect" },
     { name = "more-itertools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9f/d4/57949627e245ad733cbf7f753cad9f8bd43d79b91c9720fa279dcb2690d4/d8s_strings-0.5.0.tar.gz", hash = "sha256:5271d08f49d73228801a29a70cad53661b063effb50a7abd42aacf781ded5de9", size = 49181, upload-time = "2021-05-26T18:22:53.685Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/44/0c/a40ca4a180194907f7f020293dd7a650c3f399450be9da572d4ec7f709e6/d8s_strings-0.6.0.tar.gz", hash = "sha256:910d58310919624688a8604283663d512f06a51274039dc8f5bf229fb9e4569b", size = 112343, upload-time = "2026-07-01T12:06:31.115Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/1f/6c6a9c1de2e16551d8ae56d87b5c53520017b3d2fd44a3bab8745bb6942a/d8s_strings-0.5.0-py2.py3-none-any.whl", hash = "sha256:4fc926120ce027d7ada5af225d9557b9c6923675f148817fb1b49bbd1f721116", size = 37665, upload-time = "2021-05-26T18:22:52.221Z" },
+    { url = "https://files.pythonhosted.org/packages/9a/cb/d13fa6bcf1bf9f3efc53e9d2cddd8757a058c5e86d6085d7f07cda1ac43a/d8s_strings-0.6.0-py3-none-any.whl", hash = "sha256:be437feb476738bfdb44063f659ce89a3f1bdc6469cc898249ddb85811799119", size = 29321, upload-time = "2026-07-01T12:06:29.965Z" },
 ]
 
 [[package]]
